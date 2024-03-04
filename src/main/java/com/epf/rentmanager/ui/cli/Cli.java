@@ -39,7 +39,6 @@ public class Cli {
         ClientService clientService = ClientService.getInstance();
         try {
             long id = clientService.create(new Client(
-                    0,
                     nom,
                     prenom,
                     email,
@@ -70,13 +69,7 @@ public class Cli {
         long id = IOUtils.readInt("Entrez l'id du client à supprimer :");
         try {
 
-            clientService.delete(new Client(
-                    id,
-                    null,
-                    null,
-                    null,
-                    null
-            ));
+            clientService.delete(new Client(id));
             IOUtils.print("Le client a bien été supprimé");
         } catch (ServiceException e) {
             IOUtils.print(e.getMessage());
@@ -91,7 +84,6 @@ public class Cli {
         VehicleService vehicleService = VehicleService.getInstance();
         try {
             long id = vehicleService.create(new Vehicle(
-                    (long) 0,
                     constructeur,
                     modele,
                     (short) nb_places
@@ -120,12 +112,7 @@ public class Cli {
         VehicleService vehicleService = VehicleService.getInstance();
         long id = IOUtils.readInt("Entrez l'id du véhicule à supprimer :");
         try {
-            vehicleService.delete(new Vehicle(
-                    id,
-                    null,
-                    null,
-                    (short) 0
-            ));
+            vehicleService.delete(new Vehicle(id));
             IOUtils.print("Le véhicule a bien été supprimé");
         } catch (ServiceException e) {
             IOUtils.print(e.getMessage());
@@ -141,7 +128,6 @@ public class Cli {
         ReservationService reservationService = ReservationService.getInstance();
         try {
             long id = reservationService.create(new Reservation(
-                    (long) 0,
                     client_id,
                     vehicle_id,
                     debut,
@@ -171,13 +157,7 @@ public class Cli {
         ReservationService reservationService = ReservationService.getInstance();
         long id = IOUtils.readInt("Entrez l'id de la réservation à supprimer :");
         try {
-            reservationService.delete(new Reservation(
-                    id,
-                    (long) 0,
-                    (long) 0,
-                    null,
-                    null
-            ));
+            reservationService.delete(new Reservation(id));
             IOUtils.print("La réservation a bien été supprimée");
         } catch (ServiceException e) {
             IOUtils.print(e.getMessage());

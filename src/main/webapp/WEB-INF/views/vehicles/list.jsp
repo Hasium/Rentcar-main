@@ -1,7 +1,7 @@
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-<%@include file="/WEB-INF/views/common/head.jsp"%>
+<%@include file="/WEB-INF/views/common/head.jsp" %>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -35,8 +35,7 @@
                                     <th>Action</th>
                                 </tr>
                                 <tr>
-
-                                <c:forEach items="${vehicles}" var="vehicle">
+                                    <c:forEach items="${vehicles}" var="vehicle">
                                     <td>${vehicle.id()}.</td>
                                     <td>${vehicle.constructeur()}</td>
                                     <td>${vehicle.modele()}</td>
