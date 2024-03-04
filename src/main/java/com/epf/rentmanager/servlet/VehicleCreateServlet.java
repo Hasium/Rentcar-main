@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @WebServlet("/cars/create")
 public class VehicleCreateServlet extends HttpServlet {
-
+    private static final long serialVersionUID = 1L;
     private VehicleService vehicleService = VehicleService.getInstance();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse

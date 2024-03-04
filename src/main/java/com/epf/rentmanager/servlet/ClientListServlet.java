@@ -13,6 +13,7 @@ import java.io.IOException;
 
 @WebServlet("/users")
 public class ClientListServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     private ClientService userService = ClientService.getInstance();
 

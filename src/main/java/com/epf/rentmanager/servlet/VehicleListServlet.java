@@ -13,6 +13,7 @@ import java.io.IOException;
 
 @WebServlet("/cars")
 public class VehicleListServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     private VehicleService vehicleService = VehicleService.getInstance();
 
