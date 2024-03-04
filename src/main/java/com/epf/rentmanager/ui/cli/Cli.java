@@ -1,5 +1,6 @@
 package com.epf.rentmanager.ui.cli;
 
+import com.epf.rentmanager.dto.ReservationWithVehicleClientDto;
 import com.epf.rentmanager.dto.ReservationWithVehicleDto;
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Client;
@@ -145,7 +146,7 @@ public class Cli {
         ReservationService reservationService = ReservationService.getInstance();
         IOUtils.print("Liste des réservations :");
         try {
-            for (Reservation resa : reservationService.findAll()) {
+            for (ReservationWithVehicleClientDto resa : reservationService.findAll()) {
                 IOUtils.print(resa.toString());
             }
         } catch (ServiceException e) {

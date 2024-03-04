@@ -9,7 +9,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.epf.rentmanager.dto.ReservationWithVehicleClientDto;
 import com.epf.rentmanager.dto.ReservationWithVehicleDto;
+import com.epf.rentmanager.model.Client;
 import com.epf.rentmanager.model.Vehicle;
 import com.epf.rentmanager.persistence.ConnectionManager;
 import com.epf.rentmanager.model.Reservation;
@@ -39,7 +41,7 @@ public class ReservationDao {
             """;
     private static final String FIND_RESERVATIONS_BY_VEHICLE_QUERY = "SELECT id, client_id, debut, fin FROM Reservation WHERE vehicle_id=?;";
     private static final String FIND_RESERVATIONS_QUERY = """
-            SELECT id, client_id, vehicle_id, debut, fin 
+            SELECT Reservation.id, vehicle_id, debut, fin, Client.nom, Client.prenom, Vehicle.constructeur, Vehicle.modele
             FROM Reservation
             INNER JOIN Client ON Client.id = Reservation.client_id
             INNER JOIN Vehicle ON Vehicle.id = Reservation.vehicle_id;""";
@@ -128,16 +130,22 @@ public class ReservationDao {
         }
     }
 
-    public List<Reservation> findAll() throws DaoException {
+    public List<ReservationWithVehicleClientDto> findAll() throws DaoException {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(FIND_RESERVATIONS_QUERY)) {
             ResultSet resultSet = ps.executeQuery();
-            List<Reservation> reservations = new ArrayList<Reservation>();
+            List<ReservationWithVehicleClientDto> reservations = new ArrayList<ReservationWithVehicleClientDto>();
             while (resultSet.next()) {
-                reservations.add(new Reservation(
+                reservations.add(new ReservationWithVehicleClientDto(
                         resultSet.getLong("id"),
-                        resultSet.getLong("client_id"),
-                        resultSet.getLong("vehicle_id"),
+                        new Vehicle(
+                                resultSet.getString("constructeur"),
+                                resultSet.getString("modele")
+                        ),
+                        new Client(
+                                resultSet.getString("nom"),
+                                resultSet.getString("prenom")
+                        ),
                         resultSet.getDate("debut").toLocalDate(),
                         resultSet.getDate("fin").toLocalDate()
                 ));
