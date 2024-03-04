@@ -8,6 +8,7 @@ import com.epf.rentmanager.dao.ClientDao;
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Client;
+import com.epf.rentmanager.model.Reservation;
 
 public class ClientService {
 
@@ -77,4 +78,19 @@ public class ClientService {
         }
     }
 
+    public long countVehiclesRentedByClient(long id) throws ServiceException {
+        try {
+            return clientDao.countVehiclesRentedByClientId(id);
+        } catch (DaoException e) {
+            throw new ServiceException("Une erreur a eu lieu lors de la récupération du nombre de véhicules loués par le client");
+        }
+    }
+
+    public long countResaByClient(long id) throws ServiceException {
+        try {
+            return clientDao.countResaByClientId(id);
+        } catch (DaoException e) {
+            throw new ServiceException("Une erreur a eu lieu lors de la récupération du nombre de réservations du client");
+        }
+    }
 }

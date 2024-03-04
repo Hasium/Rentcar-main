@@ -33,26 +33,27 @@
                                     <th>Email</th>
                                     <th>Action</th>
                                 </tr>
-                                <tr>
-                                    <c:forEach items="${users}" var="user">
-                                    <td>${user.id()}.</td>
-                                    <td>${user.nom()}</td>
-                                    <td>${user.prenom()}</td>
-                                    <td>${user.email()}</td>
-                                    <td>
-                                        <a class="btn btn-primary"
-                                           href="${pageContext.request.contextPath}/users/details?id=1">
-                                            <i class="fa fa-play"></i>
-                                        </a>
-                                        <a class="btn btn-success disabled" href="#">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                        <a class="btn btn-danger disabled" href="#">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                    </td>
 
-                                </tr>
+                                <c:forEach items="${users}" var="user">
+                                    <tr>
+                                        <td>${user.id()}.</td>
+                                        <td>${user.nom()}</td>
+                                        <td>${user.prenom()}</td>
+                                        <td>${user.email()}</td>
+                                        <td>
+                                            <a class="btn btn-primary"
+                                               href="${pageContext.request.contextPath}/users/details?id=1">
+                                                <i class="fa fa-play"></i>
+                                            </a>
+                                            <a class="btn btn-success disabled" href="#">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger disabled" href="#">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
                                 </c:forEach>
                             </table>
                         </div>

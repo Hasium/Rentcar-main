@@ -20,14 +20,14 @@
                     <!-- Profile Image -->
                     <div class="box box-primary">
                         <div class="box-body box-profile">
-                            <h3 class="profile-username text-center">John Doe (john.doe@epf.fr)</h3>
+                            <h3 class="profile-username text-center">${user.prenom()} ${user.nom()} (${user.email()})</h3>
 
                             <ul class="list-group list-group-unbordered">
                                 <li class="list-group-item">
-                                    <b>Reservation(s)</b> <a class="pull-right">2</a>
+                                    <b>Reservation(s)</b> <a class="pull-right">${nbReservation}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Voiture(s)</b> <a class="pull-right">3</a>
+                                    <b>Voiture(s)</b> <a class="pull-right">${nbVehicle}</a>
                                 </li>
                             </ul>
                         </div>
@@ -52,18 +52,14 @@
                                             <th>Date de debut</th>
                                             <th>Date de fin</th>
                                         </tr>
+                                        <c:forEach items="${reservations}" var="reservationDto">
                                         <tr>
-                                            <td>3.</td>
-                                            <td>Renault Megane</td>
-                                            <td>10/01/2018</td>
-                                            <td>12/01/2018</td>
+                                            <td>${reservationDto.id()}</td>
+                                            <td>${reservationDto.vehicle().modele()} ${reservationDto.vehicle().constructeur()}</td>
+                                            <td>${reservationDto.debut()}</td>
+                                            <td>${reservationDto.fin()}</td>
                                         </tr>
-                                        <tr>
-                                            <td>7.</td>
-                                            <td>Peugeot 207</td>
-                                            <td>10/01/2018</td>
-                                            <td>12/01/2018</td>
-                                        </tr>
+                                        </c:forEach>
                                     </table>
                                 </div>
                             </div>
@@ -78,23 +74,14 @@
                                             <th>Constructeur</th>
                                             <th style=>Nombre de places</th>
                                         </tr>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>Renault</td>
-                                            <td>Clio</td>
-                                            <td>5</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2.</td>
-                                            <td>Peugeot</td>
-                                            <td>206</td>
-                                            <td>5</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3.</td>
-                                            <td>Volkswagen</td>
-                                            <td>Touran</td>
-                                            <td>7</td>
+                                        <c:forEach items="${vehicles}" var="vehicle">
+                                            <tr>
+                                                <td>${vehicle.id()}</td>
+                                                <td>${vehicle.modele()}</td>
+                                                <td>${vehicle.constructeur()}</td>
+                                                <td>${vehicle.nbPlaces()}</td>
+                                            </tr>
+                                        </c:forEach>
                                         </tr>
                                     </table>
                                 </div>

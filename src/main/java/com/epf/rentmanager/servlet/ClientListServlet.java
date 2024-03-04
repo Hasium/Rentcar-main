@@ -15,12 +15,12 @@ import java.io.IOException;
 public class ClientListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    private ClientService userService = ClientService.getInstance();
+    private ClientService clientService = ClientService.getInstance();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse
             response) throws ServletException, IOException {
         try {
-            request.setAttribute("users", userService.findAll());
+            request.setAttribute("users", clientService.findAll());
         } catch (ServiceException e) {
             IOUtils.print(e.getMessage());
         }

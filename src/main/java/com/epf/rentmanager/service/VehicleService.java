@@ -70,5 +70,13 @@ public class VehicleService {
 			throw new ServiceException("Une erreur a eu lieu lors de la récupération du nombre de véhicules");
 		}
 	}
+
+	public List<Vehicle> findVehiclesRentedByClient(long clientId) throws ServiceException {
+		try {
+			return vehicleDao.findVehiclesRentedByClient(clientId);
+		} catch (DaoException e) {
+			throw new ServiceException("Une erreur a eu lieu lors de la récupération des véhicules");
+		}
+	}
 	
 }

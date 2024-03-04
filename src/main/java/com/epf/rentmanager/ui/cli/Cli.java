@@ -1,5 +1,6 @@
 package com.epf.rentmanager.ui.cli;
 
+import com.epf.rentmanager.dto.ReservationWithVehicleDto;
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Client;
 import com.epf.rentmanager.model.Reservation;
@@ -170,7 +171,7 @@ public class Cli {
         long id = IOUtils.readInt("Entrez l'id du client :");
         IOUtils.print("Liste des réservations du client :");
         try {
-            for (Reservation resa : reservationService.findResaByClientId(id)) {
+            for (ReservationWithVehicleDto resa : reservationService.findResaByClientId(id)) {
                 IOUtils.print(resa.toString());
             }
         } catch (ServiceException e) {
@@ -191,4 +192,27 @@ public class Cli {
             IOUtils.print(e.getMessage());
         }
     }
+
+    public void countVehiclesRentedByClient() {
+        IOUtils.print("Recherche du nombre de véhicules loués par client");
+        ClientService clientService = ClientService.getInstance();
+        long id = IOUtils.readInt("Entrez l'id du client :");
+        try {
+            IOUtils.print("Le client a loué " + clientService.countVehiclesRentedByClient(id) + " véhicules");
+        } catch (ServiceException e) {
+            IOUtils.print(e.getMessage());
+        }
+    }
+
+    public void countResaByClient() {
+        IOUtils.print("Recherche du nombre de réservations par client");
+        ClientService clientService = ClientService.getInstance();
+        long id = IOUtils.readInt("Entrez l'id du client :");
+        try {
+            IOUtils.print("Le client a " + clientService.countResaByClient(id) + " réservations");
+        } catch (ServiceException e) {
+            IOUtils.print(e.getMessage());
+        }
+    }
+
 }
