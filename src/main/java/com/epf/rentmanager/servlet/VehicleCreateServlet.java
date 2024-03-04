@@ -26,12 +26,14 @@ public class VehicleCreateServlet extends HttpServlet {
             response) throws ServletException, IOException {
         String constructeur = request.getParameter("manufacturer");
         String modele = request.getParameter("modele");
-        int nb_places = Integer.parseInt(request.getParameter("seats"));
         try {
+            int nb_places = Integer.parseInt(request.getParameter("seats"));
             Vehicle vehicle = new Vehicle(constructeur, modele, nb_places);
             vehicleService.create(vehicle);
         } catch (ServiceException e) {
             IOUtils.print(e.getMessage());
+        } catch (NumberFormatException e) {
+            IOUtils.print("Le nombre de places doit être un entier");
         }
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/vehicles/create.jsp").forward(request, response);
     }
