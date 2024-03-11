@@ -12,6 +12,8 @@ import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.service.VehicleService;
 import com.epf.rentmanager.utils.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -21,9 +23,19 @@ import java.time.format.DateTimeFormatter;
 public class ReservationCreateServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private ReservationService reservationService = ReservationService.getInstance();
-    private ClientService clientService = ClientService.getInstance();
-    private VehicleService vehicleService = VehicleService.getInstance();
+
+    @Autowired
+    ReservationService reservationService;
+    @Autowired
+    ClientService clientService;
+    @Autowired
+    VehicleService vehicleService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse
             response) throws ServletException, IOException {
@@ -49,7 +61,7 @@ public class ReservationCreateServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/create.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/rents");
     }
 
 }

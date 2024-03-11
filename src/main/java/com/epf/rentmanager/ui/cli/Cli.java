@@ -1,5 +1,6 @@
 package com.epf.rentmanager.ui.cli;
 
+import com.epf.rentmanager.configuration.AppConfiguration;
 import com.epf.rentmanager.dto.ReservationWithVehicleClientDto;
 import com.epf.rentmanager.dto.ReservationWithVehicleDto;
 import com.epf.rentmanager.exception.ServiceException;
@@ -10,19 +11,22 @@ import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.service.VehicleService;
 import com.epf.rentmanager.utils.IOUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.time.LocalDate;
 
 public class Cli {
 
     public static Cli instance;
-    private ClientService clientService;
-    private VehicleService vehicleService;
-    private ReservationService reservationService;
+    ApplicationContext context = new
+            AnnotationConfigApplicationContext(AppConfiguration.class);
+    ClientService clientService = context.getBean(ClientService.class);
+    VehicleService vehicleService = context.getBean(VehicleService.class);
+    ReservationService reservationService = context.getBean(ReservationService.class);
+
 
     private Cli() {
-        this.clientService = ClientService.getInstance();
-        this.vehicleService = VehicleService.getInstance();
     }
 
     public static Cli getInstance() {
@@ -38,7 +42,6 @@ public class Cli {
         String prenom = IOUtils.readString("Entrez le prénom du client :", true);
         String email = IOUtils.readEmail("Entrez l'email du client :", true);
         LocalDate naissance = IOUtils.readDate("Entrez la date de naissance du client :", true);
-        ClientService clientService = ClientService.getInstance();
         try {
             long id = clientService.create(new Client(
                     nom,
@@ -54,7 +57,6 @@ public class Cli {
 
     public void getAllClient() {
         IOUtils.print("Liste des clients");
-        ClientService clientService = ClientService.getInstance();
         IOUtils.print("Liste des clients :");
         try {
             for (Client client : clientService.findAll()) {
@@ -67,7 +69,6 @@ public class Cli {
 
     public void deleteClient() {
         IOUtils.print("Suppression d'un client");
-        ClientService clientService = ClientService.getInstance();
         long id = IOUtils.readInt("Entrez l'id du client à supprimer :");
         try {
 
@@ -83,7 +84,6 @@ public class Cli {
         String constructeur = IOUtils.readString("Entrez le constructeur du véhicule :", true);
         String modele = IOUtils.readString("Entrez le modèle du véhicule :", true);
         int nb_places = IOUtils.readInt("Entrez le nombre de places du véhicule :");
-        VehicleService vehicleService = VehicleService.getInstance();
         try {
             long id = vehicleService.create(new Vehicle(
                     constructeur,
@@ -98,7 +98,6 @@ public class Cli {
 
     public void getAllVehicle() {
         IOUtils.print("Liste des véhicules");
-        VehicleService vehicleService = VehicleService.getInstance();
         IOUtils.print("Liste des véhicules :");
         try {
             for (Vehicle vehicle : vehicleService.findAll()) {
@@ -111,7 +110,6 @@ public class Cli {
 
     public void deleteVehicle() {
         IOUtils.print("Suppression d'un véhicule");
-        VehicleService vehicleService = VehicleService.getInstance();
         long id = IOUtils.readInt("Entrez l'id du véhicule à supprimer :");
         try {
             vehicleService.delete(new Vehicle(id));
@@ -127,7 +125,6 @@ public class Cli {
         long vehicle_id = IOUtils.readInt("Entrez l'id du véhicule :");
         LocalDate debut = IOUtils.readDate("Entrez la date de début de la réservation :", true);
         LocalDate fin = IOUtils.readDate("Entrez la date de fin de la réservation :", true);
-        ReservationService reservationService = ReservationService.getInstance();
         try {
             long id = reservationService.create(new Reservation(
                     client_id,
@@ -143,7 +140,6 @@ public class Cli {
 
     public void getAllResa() {
         IOUtils.print("Liste des réservations");
-        ReservationService reservationService = ReservationService.getInstance();
         IOUtils.print("Liste des réservations :");
         try {
             for (ReservationWithVehicleClientDto resa : reservationService.findAll()) {
@@ -156,7 +152,6 @@ public class Cli {
 
     public void deleteResa() {
         IOUtils.print("Suppression d'une réservation");
-        ReservationService reservationService = ReservationService.getInstance();
         long id = IOUtils.readInt("Entrez l'id de la réservation à supprimer :");
         try {
             reservationService.delete(new Reservation(id));
@@ -168,7 +163,6 @@ public class Cli {
 
     public void findResaByClientId() {
         IOUtils.print("Recherche des réservations par client");
-        ReservationService reservationService = ReservationService.getInstance();
         long id = IOUtils.readInt("Entrez l'id du client :");
         IOUtils.print("Liste des réservations du client :");
         try {
@@ -182,7 +176,6 @@ public class Cli {
 
     public void findResaByVehicleId() {
         IOUtils.print("Recherche des réservations par véhicule");
-        ReservationService reservationService = ReservationService.getInstance();
         long id = IOUtils.readInt("Entrez l'id du véhicule :");
         IOUtils.print("Liste des réservations du véhicule :");
         try {
@@ -196,7 +189,6 @@ public class Cli {
 
     public void countVehiclesRentedByClient() {
         IOUtils.print("Recherche du nombre de véhicules loués par client");
-        ClientService clientService = ClientService.getInstance();
         long id = IOUtils.readInt("Entrez l'id du client :");
         try {
             IOUtils.print("Le client a loué " + clientService.countVehiclesRentedByClient(id) + " véhicules");
@@ -207,7 +199,6 @@ public class Cli {
 
     public void countResaByClient() {
         IOUtils.print("Recherche du nombre de réservations par client");
-        ClientService clientService = ClientService.getInstance();
         long id = IOUtils.readInt("Entrez l'id du client :");
         try {
             IOUtils.print("Le client a " + clientService.countResaByClient(id) + " réservations");
