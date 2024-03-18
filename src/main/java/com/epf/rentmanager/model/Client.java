@@ -17,6 +17,10 @@ public record Client(long id, String nom, String prenom, String email, LocalDate
         this((long) 0, nom, prenom, "", LocalDate.now());
     }
 
+    public Client(long id, String nom, String prenom, String email) {
+        this(id, nom, prenom, email, LocalDate.now());
+    }
+
     public Client(String nom, String prenom, String email) {
         this((long) 0, nom, prenom, email, LocalDate.now());
     }

@@ -9,6 +9,7 @@ import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Client;
 import com.epf.rentmanager.model.Reservation;
+import com.epf.rentmanager.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -91,4 +92,22 @@ public class ClientService {
             throw new ServiceException("Une erreur a eu lieu lors de la récupération du nombre de réservations du client");
         }
     }
+
+    public int update(Client client) throws ServiceException {
+        if (client.nom().isEmpty() || client.prenom().isEmpty()) {
+            throw new ServiceException("Le client doit avoir un nom et un prénom non vide");
+        }
+        try {
+            client = new Client(
+                    client.id(),
+                    client.nom().toUpperCase(),
+                    client.prenom(),
+                    client.email()
+            );
+            return clientDao.update(client);
+        } catch (DaoException e) {
+            throw new ServiceException("Une erreur a eu lieu lors de la mise à jour du client");
+        }
+    }
+
 }

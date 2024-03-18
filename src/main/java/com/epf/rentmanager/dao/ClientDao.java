@@ -15,6 +15,7 @@ import java.util.Optional;
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.model.Client;
 import com.epf.rentmanager.persistence.ConnectionManager;
+import com.epf.rentmanager.utils.IOUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -36,6 +37,8 @@ public class ClientDao {
             SELECT COUNT(*) 
             FROM Reservation
             WHERE Reservation.client_id=?;""";
+
+    private static final String UPDATE_CLIENT_QUERY = "UPDATE Client SET nom=?, prenom=?, email=? WHERE id=?;";
 
     public long create(Client client) throws DaoException {
         try (Connection connection = ConnectionManager.getConnection();
@@ -149,6 +152,24 @@ public class ClientDao {
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
                 return resultSet.getInt(1);
+            } else {
+                throw new DaoException();
+            }
+        } catch (SQLException e) {
+            throw new DaoException();
+        }
+    }
+
+    public int update(Client client) throws DaoException {
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement ps = connection.prepareStatement(UPDATE_CLIENT_QUERY)) {
+            ps.setString(1, client.nom());
+            ps.setString(2, client.prenom());
+            ps.setString(3, client.email());
+            ps.setLong(4, client.id());
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                return affectedRows;
             } else {
                 throw new DaoException();
             }
