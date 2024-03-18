@@ -2,7 +2,8 @@ package com.epf.rentmanager.servlet;
 
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Client;
-import com.epf.rentmanager.service.ClientService;
+import com.epf.rentmanager.model.Vehicle;
+import com.epf.rentmanager.service.VehicleService;
 import com.epf.rentmanager.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -13,15 +14,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
-@WebServlet("/users/delete")
-public class ClientDeleteServlet extends HttpServlet {
+@WebServlet("/cars/delete")
+public class VehicleDeleteServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
     @Autowired
-    ClientService clientService;
+    VehicleService vehicleService;
 
     @Override
     public void init() throws ServletException {
@@ -33,15 +33,16 @@ public class ClientDeleteServlet extends HttpServlet {
             response) throws ServletException, IOException {
         try {
             long id = Long.parseLong(request.getParameter("id"));
-            long nb_delete = clientService.delete(new Client(id));
+            long nb_delete = vehicleService.delete(new Vehicle(id));
             if (nb_delete > 0) {
-                IOUtils.print("Client deleted");
+                IOUtils.print("Vehicle deleted");
             } else {
-                IOUtils.print("Client not found");
+                IOUtils.print("Vehicle not found");
             }
         } catch (ServiceException e) {
             IOUtils.print(e.getMessage());
         }
-        response.sendRedirect(request.getContextPath() + "/users");
+        response.sendRedirect(request.getContextPath() + "/cars");
     }
+
 }

@@ -50,10 +50,9 @@ public class VehicleDao {
 		try (Connection connection = ConnectionManager.getConnection();
 			 PreparedStatement ps = connection.prepareStatement(DELETE_VEHICLE_QUERY)) {
 			ps.setLong(1, vehicle.id());
-			ps.executeUpdate();
-			ResultSet resultSet = ps.getResultSet();
-			if (resultSet.next()) {
-				return resultSet.getInt(1);
+			int affectedRows = ps.executeUpdate();
+			if (affectedRows > 0) {
+				return affectedRows;
 			} else {
 				throw new DaoException();
 			}
