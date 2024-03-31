@@ -6,10 +6,12 @@ import com.epf.rentmanager.dto.ReservationWithVehicleDto;
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Reservation;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -65,6 +67,22 @@ public class ReservationService {
             return reservationDao.count();
         } catch (DaoException e) {
             throw new ServiceException("Une erreur a eu lieu lors de la récupération du nombre de réservations");
+        }
+    }
+
+    public Long update(Reservation reservation) throws ServiceException {
+        try {
+            return reservationDao.update(reservation);
+        } catch (DaoException e) {
+            throw new ServiceException("Une erreur a eu lieu lors de la mise à jour de la réservation");
+        }
+    }
+
+    public Optional<Reservation> findById(long id) throws ServiceException {
+        try {
+            return reservationDao.findById(id);
+        } catch (DaoException e) {
+            throw new ServiceException("Une erreur a eu lieu lors de la récupération de la réservation");
         }
     }
 

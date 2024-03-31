@@ -3,6 +3,7 @@ package com.epf.rentmanager.dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 import com.epf.rentmanager.exception.DaoException;
@@ -26,6 +27,8 @@ public class VehicleDao {
             INNER JOIN Reservation ON Reservation.vehicle_id = Vehicle.id
             WHERE Reservation.client_id=?;
             """;
+
+	private static final String UPDATE_VEHICLE_QUERY = "UPDATE Vehicle SET constructeur=?, nb_places=?, modele=? WHERE id=?;";
 
 	public long create(Vehicle vehicle) throws DaoException {
 		try (Connection connection = ConnectionManager.getConnection();
@@ -61,18 +64,18 @@ public class VehicleDao {
 		}
 	}
 
-	public Vehicle findById(long id) throws DaoException {
+	public Optional<Vehicle> findById(long id) throws DaoException {
 		try (Connection connection = ConnectionManager.getConnection();
 			 PreparedStatement ps = connection.prepareStatement(FIND_VEHICLE_QUERY)) {
 			ps.setLong(1, id);
 			ResultSet resultSet = ps.executeQuery();
 			if (resultSet.next()) {
-				return new Vehicle(
+				return Optional.of(new Vehicle(
 						resultSet.getLong("id"),
 						resultSet.getString("constructeur"),
 						resultSet.getString("modele"),
 						resultSet.getShort("nb_places")
-				);
+				));
 			} else {
 				throw new DaoException();
 			}
@@ -129,6 +132,24 @@ public class VehicleDao {
 				));
 			}
 			return vehicles;
+		} catch (SQLException e) {
+			throw new DaoException();
+		}
+	}
+
+	public int update(Vehicle vehicle) throws DaoException {
+		try (Connection connection = ConnectionManager.getConnection();
+			 PreparedStatement ps = connection.prepareStatement(UPDATE_VEHICLE_QUERY)) {
+			ps.setString(1, vehicle.constructeur());
+			ps.setInt(2, vehicle.nbPlaces());
+			ps.setString(3, vehicle.modele());
+			ps.setLong(4, vehicle.id());
+			int affectedRows = ps.executeUpdate();
+			if (affectedRows > 0) {
+				return affectedRows;
+			} else {
+				throw new DaoException();
+			}
 		} catch (SQLException e) {
 			throw new DaoException();
 		}

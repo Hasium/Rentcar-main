@@ -1,6 +1,7 @@
 package com.epf.rentmanager.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
@@ -36,7 +37,7 @@ public class VehicleService {
 		}
 	}
 
-	public Vehicle findById(long id) throws ServiceException {
+	public Optional<Vehicle> findById(long id) throws ServiceException {
 		try {
 			return vehicleDao.findById(id);
 		} catch (DaoException e) {
@@ -73,6 +74,20 @@ public class VehicleService {
 			return vehicleDao.findVehiclesRentedByClient(clientId);
 		} catch (DaoException e) {
 			throw new ServiceException("Une erreur a eu lieu lors de la récupération des véhicules");
+		}
+	}
+
+	public int update(Vehicle vehicle) throws ServiceException {
+		if (vehicle.constructeur().isEmpty()) {
+			throw new ServiceException("Le véhicule doit avoir un constructeur non vide");
+		}
+		if (vehicle.nbPlaces() < 1) {
+			throw new ServiceException("Le véhicule doit avoir au moins une place");
+		}
+		try {
+			return vehicleDao.update(vehicle);
+		} catch (DaoException e) {
+			throw new ServiceException("Une erreur a eu lieu lors de la mise à jour du véhicule");
 		}
 	}
 	
