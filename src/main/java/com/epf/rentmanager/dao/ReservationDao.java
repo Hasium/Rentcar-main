@@ -41,6 +41,12 @@ public class ReservationDao {
     private static final String COUNT_RESERVATIONS_QUERY = "SELECT COUNT(*) FROM Reservation;";
     private static final String UPDATE_RESERVATION_QUERY = "UPDATE Reservation SET client_id=?, vehicle_id=?, debut=?, fin=? WHERE id=?;";
     private static final String FIND_RESERVATIONS_BY_ID = "SELECT id, client_id, vehicle_id, debut, fin FROM Reservation WHERE id=?;";
+    private static final String FIND_DETAILS_RESERVATIONS_BY_ID = """
+            SELECT Reservation.id, Reservation.vehicle_id, Reservation.client_id, Reservation.debut, Reservation.fin, Client.nom, Client.prenom, Client.email, Vehicle.constructeur, Vehicle.modele, Vehicle.nb_places
+            FROM Reservation
+            INNER JOIN Client ON Client.id = Reservation.client_id
+            INNER JOIN Vehicle ON Vehicle.id = Reservation.vehicle_id
+            WHERE Reservation.id=?;""";
 
     public long create(Reservation reservation) throws DaoException {
         try (Connection connection = ConnectionManager.getConnection();
@@ -193,6 +199,37 @@ public class ReservationDao {
                         resultSet.getLong("id"),
                         resultSet.getLong("client_id"),
                         resultSet.getLong("vehicle_id"),
+                        resultSet.getDate("debut").toLocalDate(),
+                        resultSet.getDate("fin").toLocalDate()
+                ));
+            } else {
+                throw new DaoException();
+            }
+        } catch (SQLException e) {
+            throw new DaoException();
+        }
+    }
+
+    public Optional<ReservationWithVehicleClientDto> findDetailsById(long id) throws DaoException {
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement ps = connection.prepareStatement(FIND_DETAILS_RESERVATIONS_BY_ID)) {
+            ps.setLong(1, id);
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(new ReservationWithVehicleClientDto(
+                        resultSet.getLong("id"),
+                        new Vehicle(
+                                resultSet.getLong("vehicle_id"),
+                                resultSet.getString("constructeur"),
+                                resultSet.getString("constructeur"),
+                                resultSet.getInt("nb_places")
+                        ),
+                        new Client(
+                                resultSet.getLong("client_id"),
+                                resultSet.getString("nom"),
+                                resultSet.getString("prenom"),
+                                resultSet.getString("email")
+                        ),
                         resultSet.getDate("debut").toLocalDate(),
                         resultSet.getDate("fin").toLocalDate()
                 ));

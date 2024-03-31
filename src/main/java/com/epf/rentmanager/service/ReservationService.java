@@ -86,4 +86,12 @@ public class ReservationService {
         }
     }
 
+    public Optional<ReservationWithVehicleClientDto> findDetailsById(long id) throws ServiceException {
+        try {
+            return reservationDao.findDetailsById(id);
+        } catch (DaoException e) {
+            throw new ServiceException("Une erreur a eu lieu lors de la récupération de la réservation");
+        }
+    }
+
 }
