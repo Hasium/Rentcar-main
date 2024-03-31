@@ -110,4 +110,12 @@ public class ClientService {
         }
     }
 
+    public List<Client> findClientsByVehicleId(long id) throws ServiceException {
+        try {
+            return clientDao.findClientsByVehicleId(id);
+        } catch (DaoException e) {
+            throw new ServiceException("Une erreur a eu lieu lors de la récupération des clients");
+        }
+    }
+
 }

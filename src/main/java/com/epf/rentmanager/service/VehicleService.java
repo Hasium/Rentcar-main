@@ -90,5 +90,21 @@ public class VehicleService {
 			throw new ServiceException("Une erreur a eu lieu lors de la mise à jour du véhicule");
 		}
 	}
+
+	public int countResaByVehicleId(long id) throws ServiceException {
+		try {
+			return vehicleDao.countResaByVehicleId(id);
+		} catch (DaoException e) {
+			throw new ServiceException("Une erreur a eu lieu lors de la récupération des réservations");
+		}
+	}
+
+	public int countClientByVehicleId(long id) throws ServiceException {
+		try {
+			return vehicleDao.countClientByVehicleId(id);
+		} catch (DaoException e) {
+			throw new ServiceException("Une erreur a eu lieu lors de la récupération des clients");
+		}
+	}
 	
 }

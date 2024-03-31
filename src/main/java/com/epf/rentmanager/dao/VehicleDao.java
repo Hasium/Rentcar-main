@@ -27,8 +27,16 @@ public class VehicleDao {
             INNER JOIN Reservation ON Reservation.vehicle_id = Vehicle.id
             WHERE Reservation.client_id=?;
             """;
-
 	private static final String UPDATE_VEHICLE_QUERY = "UPDATE Vehicle SET constructeur=?, nb_places=?, modele=? WHERE id=?;";
+	private static final String COUNT_RESA_QUERY = """
+			SELECT COUNT(*) 
+			FROM Reservation
+			WHERE Reservation.vehicle_id=?;""";
+	private static final String COUNT_Client_QUERY = """
+			SELECT COUNT(*) 
+			FROM Reservation
+			INNER JOIN Client ON Client.id = Reservation.client_id
+			WHERE Reservation.vehicle_id=?;""";
 
 	public long create(Vehicle vehicle) throws DaoException {
 		try (Connection connection = ConnectionManager.getConnection();
@@ -154,4 +162,35 @@ public class VehicleDao {
 			throw new DaoException();
 		}
 	}
+
+	public int countResaByVehicleId(long id) throws DaoException {
+		try (Connection connection = ConnectionManager.getConnection();
+			 PreparedStatement ps = connection.prepareStatement(COUNT_RESA_QUERY)) {
+			ps.setLong(1, id);
+			ResultSet resultSet = ps.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getInt(1);
+			} else {
+				throw new DaoException();
+			}
+		} catch (SQLException e) {
+			throw new DaoException();
+		}
+	}
+
+	public int countClientByVehicleId(long id) throws DaoException {
+		try (Connection connection = ConnectionManager.getConnection();
+			 PreparedStatement ps = connection.prepareStatement(COUNT_Client_QUERY)) {
+			ps.setLong(1, id);
+			ResultSet resultSet = ps.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getInt(1);
+			} else {
+				throw new DaoException();
+			}
+		} catch (SQLException e) {
+			throw new DaoException();
+		}
+	}
+
 }

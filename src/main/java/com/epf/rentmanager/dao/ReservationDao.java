@@ -32,7 +32,7 @@ public class ReservationDao {
             INNER JOIN Vehicle ON Reservation.vehicle_id = Vehicle.id
             WHERE client_id=?;
             """;
-    private static final String FIND_RESERVATIONS_BY_VEHICLE_QUERY = "SELECT id, client_id, debut, fin FROM Reservation WHERE vehicle_id=?;";
+    private static final String FIND_RESERVATIONS_BY_VEHICLE_QUERY = "SELECT id, client_id, vehicle_id, debut, fin FROM Reservation WHERE vehicle_id=?;";
     private static final String FIND_RESERVATIONS_QUERY = """
             SELECT Reservation.id, vehicle_id, debut, fin, Client.nom, Client.prenom, Vehicle.constructeur, Vehicle.modele
             FROM Reservation
