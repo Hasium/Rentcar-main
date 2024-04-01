@@ -1,10 +1,8 @@
 package com.epf.rentmanager.service;
 
-import com.epf.rentmanager.dao.ClientDao;
 import com.epf.rentmanager.dao.VehicleDao;
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
-import com.epf.rentmanager.model.Client;
 import com.epf.rentmanager.model.Vehicle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -53,7 +49,7 @@ public class VehiclesServiceTest {
     @Test
     void create_should_fail_when_vehicle_has_empty_constructeur() throws DaoException {
         // Given
-        Vehicle vehicle = new Vehicle((long) 1, "", "Doe", 1);
+        Vehicle vehicle = new Vehicle((long) 1, "", "Doe", 5);
         when(this.vehicleDao.create(vehicle)).thenThrow(DaoException.class);
 
         // Then
@@ -63,7 +59,7 @@ public class VehiclesServiceTest {
     @Test
     void create_should_fail_when_vehicle_has_empty_modele() throws DaoException {
         // Given
-        Vehicle vehicle = new Vehicle((long) 1, "John", "", 1);
+        Vehicle vehicle = new Vehicle((long) 1, "John", "", 5);
         when(this.vehicleDao.create(vehicle)).thenThrow(DaoException.class);
 
         // Then
@@ -71,9 +67,9 @@ public class VehiclesServiceTest {
     }
 
     @Test
-    void create_should_fail_when_vehicle_has_empty_nb_places() throws DaoException {
+    void create_should_fail_when_vehicle_has_bad_nb_places() throws DaoException {
         // Given
-        Vehicle vehicle = new Vehicle((long) 1, "John", "Doe", 0);
+        Vehicle vehicle = new Vehicle((long) 1, "John", "Doe", 1);
         when(this.vehicleDao.create(vehicle)).thenThrow(DaoException.class);
 
         // Then
@@ -83,17 +79,17 @@ public class VehiclesServiceTest {
     @Test
     void create_should_pass_when_vehicle_has_valid_data() throws DaoException, ServiceException {
         // Given
-        Vehicle vehicle = new Vehicle("John", "Doe", 1);
+        Vehicle vehicle = new Vehicle("John", "Doe", 5);
         when(this.vehicleDao.create(vehicle)).thenReturn((long) 0);
 
         // Then
-        assert((long) 0 == vehicleService.create(vehicle));
+        assertEquals(0, vehicleService.create(vehicle));
     }
 
     @Test
     void delete_should_fail_when_dao_throws_exception() throws DaoException {
         // Given
-        Vehicle vehicle = new Vehicle((long) 1, "John", "Doe", 1);
+        Vehicle vehicle = new Vehicle((long) 1, "John", "Doe", 5);
         when(this.vehicleDao.delete(vehicle)).thenThrow(DaoException.class);
 
         // Then
@@ -112,7 +108,7 @@ public class VehiclesServiceTest {
     @Test
     void update_should_fail_when_dao_throws_exception() throws DaoException {
         // Given
-        Vehicle vehicle = new Vehicle((long) 1, "John", "Doe", 1);
+        Vehicle vehicle = new Vehicle((long) 1, "John", "Doe", 5);
         when(this.vehicleDao.update(vehicle)).thenThrow(DaoException.class);
 
         // Then

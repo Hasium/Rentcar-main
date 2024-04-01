@@ -1,5 +1,6 @@
 package com.epf.rentmanager.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,11 +27,30 @@ public class ClientService {
         this.clientDao = clientDao;
     }
 
-
-    public long create(Client client) throws ServiceException {
-        if (client.nom().isEmpty() || client.prenom().isEmpty()) {
+    private void verifNameFirstName(Client client) throws ServiceException {
+        if (client.nom().isEmpty() || client.prenom().isEmpty()
+                || client.nom().length() < 3 || client.prenom().length() < 3) {
             throw new ServiceException("Le client doit avoir un nom et un prénom non vide");
         }
+    }
+
+    private void verifEmail(Client client) throws ServiceException {
+        String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        if (!client.email().matches(regex)) {
+            throw new ServiceException("Email invalide");
+        }
+    }
+
+    private void verifAge(Client client) throws ServiceException {
+        if (client.naissance().isAfter(LocalDate.now().minusYears(18))) {
+            throw new ServiceException("Le client doit avoir au moins 18 ans");
+        }
+    }
+
+    public long create(Client client) throws ServiceException {
+        verifNameFirstName(client);
+        verifEmail(client);
+        verifAge(client);
         try {
             client = new Client(
                     client.id(),
@@ -48,7 +68,7 @@ public class ClientService {
     public Optional<Client> findById(long id) throws ServiceException {
         try {
             return clientDao.findById(id);
-        } catch (DaoException e){
+        } catch (DaoException e) {
             throw new ServiceException("Une erreur a eu lieu lors de récupération d'un client");
         }
     }
@@ -56,7 +76,7 @@ public class ClientService {
     public List<Client> findAll() throws ServiceException {
         try {
             return clientDao.findAll();
-        } catch (DaoException e){
+        } catch (DaoException e) {
             throw new ServiceException("Une erreur a eu lieu lors de la récupération des clients");
         }
     }
@@ -94,9 +114,9 @@ public class ClientService {
     }
 
     public int update(Client client) throws ServiceException {
-        if (client.nom().isEmpty() || client.prenom().isEmpty()) {
-            throw new ServiceException("Le client doit avoir un nom et un prénom non vide");
-        }
+        verifNameFirstName(client);
+        verifEmail(client);
+        verifAge(client);
         try {
             client = new Client(
                     client.id(),

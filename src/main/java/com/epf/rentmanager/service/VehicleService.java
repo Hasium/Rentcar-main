@@ -22,14 +22,29 @@ public class VehicleService {
 	private VehicleService(VehicleDao vehicleDao) {
 		this.vehicleDao = vehicleDao;
 	}
+
+	private void verifNbPlaces(Vehicle vehicle) throws ServiceException {
+		if (vehicle.nbPlaces() < 2 || vehicle.nbPlaces() > 9) {
+			throw new ServiceException("Le nombre de places doit être supérieur à 0");
+		}
+	}
+
+	private void verifConstructeur(Vehicle vehicle) throws ServiceException {
+		if (vehicle.constructeur().isEmpty()) {
+			throw new ServiceException("Le constructeur ne doit pas être vide");
+		}
+	}
+
+	private void verifModele(Vehicle vehicle) throws ServiceException {
+		if (vehicle.modele().isEmpty()) {
+			throw new ServiceException("Le modèle ne doit pas être vide");
+		}
+	}
 	
 	public long create(Vehicle vehicle) throws ServiceException {
-		if (vehicle.constructeur().isEmpty()) {
-			throw new ServiceException("Le véhicule doit avoir un constructeur non vide");
-		}
-		if (vehicle.nbPlaces() < 1) {
-			throw new ServiceException("Le véhicule doit avoir au moins une place");
-		}
+		verifNbPlaces(vehicle);
+		verifConstructeur(vehicle);
+		verifModele(vehicle);
 		try {
 			return vehicleDao.create(vehicle);
 		} catch (DaoException e) {
@@ -78,6 +93,9 @@ public class VehicleService {
 	}
 
 	public int update(Vehicle vehicle) throws ServiceException {
+		verifNbPlaces(vehicle);
+		verifConstructeur(vehicle);
+		verifModele(vehicle);
 		if (vehicle.constructeur().isEmpty()) {
 			throw new ServiceException("Le véhicule doit avoir un constructeur non vide");
 		}

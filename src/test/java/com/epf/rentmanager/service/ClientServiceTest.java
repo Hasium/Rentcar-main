@@ -2,15 +2,12 @@ package com.epf.rentmanager.service;
 
 import com.epf.rentmanager.dao.ClientDao;
 import com.epf.rentmanager.model.Client;
-import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,7 +23,7 @@ public class ClientServiceTest {
     private ClientService clientService;
 
     @Mock
-    private ClientDao ClientDao;
+    private ClientDao clientDao;
 
     @BeforeEach
     public void setUp() {
@@ -36,7 +33,7 @@ public class ClientServiceTest {
     @Test
     void findAll_should_fail_when_dao_throws_exception() throws DaoException {
         // When
-        when(this.ClientDao.findAll()).thenThrow(DaoException.class);
+        when(this.clientDao.findAll()).thenThrow(DaoException.class);
 
         // Then
         assertThrows(ServiceException.class, () -> clientService.findAll());
@@ -45,7 +42,7 @@ public class ClientServiceTest {
     @Test
     void findById_should_fail_when_dao_throws_exception() throws DaoException {
         // When
-        when(this.ClientDao.findById(1)).thenThrow(DaoException.class);
+        when(this.clientDao.findById(1)).thenThrow(DaoException.class);
 
         // Then
         assertThrows(ServiceException.class, () -> clientService.findById(1));
@@ -54,7 +51,7 @@ public class ClientServiceTest {
     @Test
     void create_should_fail_when_client_has_empty_name_or_surname() throws DaoException {
         // Given
-        Client client = new Client(1, "", "Doe", "doe@example.com", LocalDate.now());
+        Client client = new Client(1, "", "aaa", "aaa@example.com", LocalDate.now().minusYears(20));
 
         // Then
         assertThrows(ServiceException.class, () -> clientService.create(client));
@@ -63,18 +60,18 @@ public class ClientServiceTest {
     @Test
     void create_should_pass_when_client_has_valid_data() throws DaoException, ServiceException {
         // Given
-        Client client = new Client("John", "Doe", "doe@example.com", LocalDate.now());
-        when(this.ClientDao.create(client)).thenReturn((long) 0);
+        Client client = new Client("John", "aaa", "aaa@example.com", LocalDate.now().minusYears(20));
+        when(this.clientDao.create(client)).thenReturn((long) 0);
 
         // Then
-        assert((long) 0 == clientService.create(client));
+        assertEquals(0, clientService.create(client));
     }
 
     @Test
     void delete_should_fail_when_dao_throws_exception() throws DaoException {
         // Given
-        Client client = new Client(1, "John", "Doe", "doe@example.com", LocalDate.now());
-        when(this.ClientDao.delete(client)).thenThrow(DaoException.class);
+        Client client = new Client(1, "John", "aaa", "aaa@example.com", LocalDate.now().minusYears(20));
+        when(this.clientDao.delete(client)).thenThrow(DaoException.class);
 
         // Then
         assertThrows(ServiceException.class, () -> clientService.delete(client));
@@ -83,7 +80,7 @@ public class ClientServiceTest {
     @Test
     void count_should_fail_when_dao_throws_exception() throws DaoException {
         // When
-        when(this.ClientDao.count()).thenThrow(DaoException.class);
+        when(this.clientDao.count()).thenThrow(DaoException.class);
 
         // Then
         assertThrows(ServiceException.class, () -> clientService.count());
@@ -92,7 +89,7 @@ public class ClientServiceTest {
     @Test
     void countVehiclesRentedByClient_should_fail_when_dao_throws_exception() throws DaoException {
         // When
-        when(this.ClientDao.countVehiclesRentedByClientId(1)).thenThrow(DaoException.class);
+        when(this.clientDao.countVehiclesRentedByClientId(1)).thenThrow(DaoException.class);
 
         // Then
         assertThrows(ServiceException.class, () -> clientService.countVehiclesRentedByClient(1));
@@ -101,7 +98,7 @@ public class ClientServiceTest {
     @Test
     void countResaByClient_should_fail_when_dao_throws_exception() throws DaoException {
         // When
-        when(this.ClientDao.countResaByClientId(1)).thenThrow(DaoException.class);
+        when(this.clientDao.countResaByClientId(1)).thenThrow(DaoException.class);
 
         // Then
         assertThrows(ServiceException.class, () -> clientService.countResaByClient(1));
@@ -110,7 +107,52 @@ public class ClientServiceTest {
     @Test
     void update_should_fail_when_client_has_empty_name_or_surname() throws DaoException {
         // Given
-        Client client = new Client(1, "", "Doe", "doe@example.com", LocalDate.now());
+        Client client = new Client(1, "", "aaa", "aaa@example.com", LocalDate.now().minusYears(20));
+
+        // Then
+        assertThrows(ServiceException.class, () -> clientService.update(client));
+    }
+
+    @Test
+    void update_should_fail_when_client_has_a_too_short_name() throws DaoException {
+        // Given
+        Client client = new Client(1, "da", "aaa", "aaa@example.com", LocalDate.now().minusYears(20));
+
+        // Then
+        assertThrows(ServiceException.class, () -> clientService.update(client));
+    }
+
+    @Test
+    void update_should_fail_when_client_has_a_too_short_surname() throws DaoException {
+        // Given
+        Client client = new Client(1, "aaaa", "aa", "aaa@example.com", LocalDate.now().minusYears(20));
+
+        // Then
+        assertThrows(ServiceException.class, () -> clientService.update(client));
+    }
+
+    @Test
+    void update_should_fail_when_client_has_a_invalid_email_no_at() throws DaoException {
+        // Given
+        Client client = new Client(1, "aaaa", "aa", "aaaexample.com", LocalDate.now().minusYears(20));
+
+        // Then
+        assertThrows(ServiceException.class, () -> clientService.update(client));
+    }
+
+    @Test
+    void update_should_fail_when_client_has_a_invalid_email_bad_end() throws DaoException {
+        // Given
+        Client client = new Client(1, "aaaa", "aa", "aaa@example.commm", LocalDate.now().minusYears(20));
+
+        // Then
+        assertThrows(ServiceException.class, () -> clientService.update(client));
+    }
+
+    @Test
+    void update_should_fail_when_client_is_minus_18() throws DaoException {
+        // Given
+        Client client = new Client(1, "aaaa", "aa", "aaa@example.com", LocalDate.now().minusYears(15));
 
         // Then
         assertThrows(ServiceException.class, () -> clientService.update(client));
@@ -119,7 +161,7 @@ public class ClientServiceTest {
     @Test
     void findClientsByVehicleId_should_fail_when_dao_throws_exception() throws DaoException {
         // When
-        when(this.ClientDao.findClientsByVehicleId(1)).thenThrow(DaoException.class);
+        when(this.clientDao.findClientsByVehicleId(1)).thenThrow(DaoException.class);
 
         // Then
         assertThrows(ServiceException.class, () -> clientService.findClientsByVehicleId(1));
