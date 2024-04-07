@@ -53,7 +53,7 @@ public class ReservationServiceTest {
         assertThrows(ServiceException.class, () -> reservationService.create(new Reservation(
                 (long) 1,
                 (long) 1,
-                LocalDate.now().minusDays(8),
+                LocalDate.now().minusDays(5),
                 LocalDate.now()
         )));
     }

@@ -61,7 +61,7 @@ public class ClientServiceTest {
     @Test
     void create_should_pass_when_client_has_valid_data() throws DaoException, ServiceException {
         // Given
-        Client client = new Client("John", "aaa", "aaa@example.com", LocalDate.now().minusYears(20));
+        Client client = new Client("JOHN", "aaa", "aaa@example.com", LocalDate.now().minusYears(20));
         when(this.clientDao.create(client)).thenReturn((long) 0);
 
         // Then

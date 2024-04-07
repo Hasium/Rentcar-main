@@ -53,7 +53,6 @@ public class VehiclesServiceTest {
     void create_should_fail_when_vehicle_has_empty_constructeur() throws DaoException {
         // Given
         Vehicle vehicle = new Vehicle((long) 1, "", "Doe", 5);
-        when(this.vehicleDao.create(vehicle)).thenThrow(DaoException.class);
 
         // Then
         assertThrows(ServiceException.class, () -> vehicleService.create(vehicle));
@@ -63,7 +62,6 @@ public class VehiclesServiceTest {
     void create_should_fail_when_vehicle_has_empty_modele() throws DaoException {
         // Given
         Vehicle vehicle = new Vehicle((long) 1, "John", "", 5);
-        when(this.vehicleDao.create(vehicle)).thenThrow(DaoException.class);
 
         // Then
         assertThrows(ServiceException.class, () -> vehicleService.create(vehicle));
@@ -72,8 +70,7 @@ public class VehiclesServiceTest {
     @Test
     void create_should_fail_when_vehicle_has_bad_nb_places() throws DaoException {
         // Given
-        Vehicle vehicle = new Vehicle((long) 1, "John", "Doe", 1);
-        when(this.vehicleDao.create(vehicle)).thenThrow(DaoException.class);
+        Vehicle vehicle = new Vehicle((long) 1, "JOHN", "Doe", 1);
 
         // Then
         assertThrows(ServiceException.class, () -> vehicleService.create(vehicle));
